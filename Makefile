@@ -12,7 +12,10 @@ mv-build: ## Build Docker image using maven build plugin
    mvn spring-boot:build-image
 
 build: ## Docker Build image using maven build plugin
-	docker build -t erasmolpa/github-client:${TAG} .
+	docker build  --no-cache -t erasmolpa/github-client:${TAG} .
+
+scan: ## Docker Scan Dockerfile
+	docker scan --file Dockerfile
 
 run: ## Docker Run default ports
 	docker run -p ${LOCAL_PORT}:${CONTAINER_PORT}  -p 8443:8443  erasmolpa/github-client:${TAG}
