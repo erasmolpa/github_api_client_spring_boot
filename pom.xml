@@ -12,10 +12,10 @@
 
 
     <groupId>com.githubclient</groupId>
-    <artifactId>contributors-ranking</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>github-api-client</artifactId>
+    <version>1.0.0</version>
     <name>github client contributors</name>
-    <description>github client contributors</description>
+    <description>github client </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -192,6 +192,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                    <image>
+                        <name>docker.io/erasmolpa/${project.artifactId}:v1</name>
+                    </image>
+                </configuration>
             </plugin>
         </plugins>
     </build>

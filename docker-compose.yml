@@ -1,0 +1,16 @@
+version: '3'
+services:
+  github-api-client:
+    env_file:
+      - .env
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: "erasmolpa/github-client:${TAG}"
+    ports:
+      - "${LOCAL_PORT}:${CONTAINER_PORT}"
+    networks:
+      - github-client-network
+networks:
+  github-client-network
+    driver: bridge
