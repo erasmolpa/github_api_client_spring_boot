@@ -21,7 +21,7 @@ public class GithubClientController {
         this.githubClientService = ghService;
     }
 
-    @GetMapping(value = "contributors-by-city")
+    @GetMapping(value = "ranking")
     public String getContributorsByCity(@RequestParam(value = "location", defaultValue = "barcelona") String location,
                                         @RequestParam(value = "page", defaultValue = "1") int page,
                                         @RequestParam(value = "limit", defaultValue = "10") int limit) throws GithubClientExection {
@@ -29,7 +29,7 @@ public class GithubClientController {
         return githubClientService.getContributorsByCity(location, page, limit);
     }
 
-    @GetMapping(value = "barcelona-users")
+    @GetMapping(value = "bcn-ranking")
     public List<GitHubUser> getBarcelonaUsers() throws GithubClientExection {
 
         return githubClientService.getAllBarcelonaUsers();

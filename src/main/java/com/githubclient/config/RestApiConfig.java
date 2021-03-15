@@ -1,39 +1,46 @@
 package com.githubclient.config;
 
-import com.githubclient.exception.RestTemplateResponseErrorHandler;
+import com.githubclient.exception.HttpClientErrorHandler;
+import com.githubclient.instrumentation.HttpClientRequestInterceptor;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.client.RestTemplate;
-
-import java.time.Duration;
 
 @Configuration
 public class RestApiConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiConfig.class);
 
-    @Value("${GITHUB_API.CONNECT_TIMEOUT}")
-    private final int CONNECT_TIMEOUT=0;
-
-    @Value("${GITHUB_API.READ_TIMEOUT}")
-    private final int READ_TIMEOUT=0;
-
-    @Value("${GITHUB_API.URL}")
-    private String API_URL;
-    private final String SEARCH_URI_PATH = "search/users?";
+    @Autowired
+    CloseableHttpClient httpClient;
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
+                     restTemplate.setErrorHandler(new HttpClientErrorHandler());
+        return restTemplate;
+    }
 
-        return builder.setConnectTimeout(Duration.ofMillis(CONNECT_TIMEOUT))
-                .setReadTimeout(Duration.ofMillis(READ_TIMEOUT))
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .rootUri(API_URL)
-                .build();
+    @Bean
+    public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        clientHttpRequestFactory.setHttpClient(httpClient);
+        return clientHttpRequestFactory;
+    }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setThreadNamePrefix("poolScheduler");
+        scheduler.setPoolSize(50);
+        return scheduler;
     }
 }
 

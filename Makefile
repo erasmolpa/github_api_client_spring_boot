@@ -24,27 +24,50 @@ run: ## Docker Run default ports
 push: ## Docker Push run default ports
 	docker push erasmolpa/github-client:${TAG}
 
+dc-stop: ## Stop all containers.
+	docker stop $(docker ps -q)
 
-up: ## Docker Compose Start all or c=<name> containers in foreground
+dc-kill: ## Kill all containers.
+	 docker kill $(docker ps -q)
+
+dc-rm: ## Removes all containers.
+	docker rm $(docker ps -a -q)
+
+dc-rmi: ## Removes all images.
+	docker rmi $(docker images -a -q)
+
+dc-rmdi: ## Removes dangling images.
+	docker rmi $(docker images -a --filter=dangling=true -q)
+
+dc-rm-exited-containers: ## Removes containers that are done.
+	docker rm -v $(docker ps -a -q -f status=exited)
+
+dc-prune: dc-kill ## Removes containers that are done.
+	docker system prune
+
+service-up-from-scratch: mv-install service-restart ## Recreate artifact, docker image and redeploy de Compose
+
+service-up: ## Docker Compose Start all or c=<name> containers in foreground
 	${compose} up -d --force-recreate --build $(c)
 
-start: ## Docker Compose Start all or c=<name> containers in background
+service-start: ## Docker Compose Start all or c=<name> containers in background
 	${compose} up -d $(c)
 
-stop: ## Docker Compose Stop all or c=<name> containers
+service-stop: ## Docker Compose Stop all or c=<name> containers
 	${compose} stop $(c)
 
-restart: ## Docker Compose Restart all or c=<name> containers
-	${compose} stop $(c)
+service-restart: service-down ## Docker Compose Restart all or c=<name> containers
 	${compose} up -d --force-recreate --build $(c)
 
-logs: ## Docker Compose Show logs for all or c=<name> containers
+service-logs: ## Docker Compose Show logs for all or c=<name> containers
 	${compose} logs --tail=100 -f $(c)
 
-status: ## Docker Compose Show status of containers
+service-down:  ## Docker Compose Clean all data
+	${compose} down
+
+service-status: ## Docker Compose Show status of containers
 	${compose} ps
 
 ps: status ## Alias of status
 
-down:  ## Docker Compose Clean all data
-	${compose} down
+
