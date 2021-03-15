@@ -19,7 +19,7 @@ scan: ## Docker Scan Dockerfile
 	docker scan --file Dockerfile
 
 run: ## Docker Run default ports
-	docker run -p ${LOCAL_PORT}:${CONTAINER_PORT}  -p 8443:8443  erasmolpa/github-client:${TAG}
+	docker run --rm --name ${CONTAINER_NAME} -p ${LOCAL_PORT}:${CONTAINER_PORT}  -p 8443:8443  erasmolpa/github-client:${TAG}
 
 push: ## Docker Push run default ports
 	docker push erasmolpa/github-client:${TAG}

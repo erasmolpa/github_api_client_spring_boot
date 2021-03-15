@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   github-api-client:
-    container_name: github-api-client
+    container_name: "${CONTAINER_NAME}"
     restart: always
     healthcheck:
       test: "curl --fail --silent localhost:${LOCAL_PORT}/actuator/health | grep UP || exit 1"
