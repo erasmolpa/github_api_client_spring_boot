@@ -18,6 +18,7 @@ import java.util.List;
 /**
  * TODO
  * Añadir mock test https://www.baeldung.com/spring-mock-rest-template
+ *                  https://www.baeldung.com/spring-rest-template-error-handling
  *
  *
  */

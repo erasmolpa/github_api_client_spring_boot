@@ -1,5 +1,6 @@
 package com.githubclient.config;
 
+import com.githubclient.exception.RestTemplateResponseErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,10 @@ public class RestApiConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiConfig.class);
 
     @Value("${GITHUB_API.CONNECT_TIMEOUT}")
-    private int CONNECT_TIMEOUT=0;
+    private final int CONNECT_TIMEOUT=0;
 
     @Value("${GITHUB_API.READ_TIMEOUT}")
-    private int READ_TIMEOUT=0;
+    private final int READ_TIMEOUT=0;
 
     @Value("${GITHUB_API.URL}")
     private String API_URL;
@@ -30,6 +31,7 @@ public class RestApiConfig {
 
         return builder.setConnectTimeout(Duration.ofMillis(CONNECT_TIMEOUT))
                 .setReadTimeout(Duration.ofMillis(READ_TIMEOUT))
+                .errorHandler(new RestTemplateResponseErrorHandler())
                 .rootUri(API_URL)
                 .build();
     }

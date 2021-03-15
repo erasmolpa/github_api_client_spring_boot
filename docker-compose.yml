@@ -1,6 +1,14 @@
-version: '3'
+version: '3.3'
 services:
   github-api-client:
+    container_name: github-api-client
+    restart: always
+    healthcheck:
+      test: "curl --fail --silent localhost:${LOCAL_PORT}/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     env_file:
       - .env
     build:
@@ -9,8 +17,3 @@ services:
     image: "erasmolpa/github-client:${TAG}"
     ports:
       - "${LOCAL_PORT}:${CONTAINER_PORT}"
-    networks:
-      - github-client-network
-networks:
-  github-client-network
-    driver: bridge
