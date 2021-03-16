@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.yaml"})
 public class GithubClientService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GithubClientService.class);
@@ -63,6 +63,7 @@ public class GithubClientService {
             //return restTemplate.getForObject(uriBuilder.toUriString(), GithubUsers.class).getGitHubUsers();
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            //@TODO Set user Agent ?
             HttpEntity<GitHubUser> requestEntity = new HttpEntity<>(null, headers);
 
 
@@ -81,5 +82,29 @@ public class GithubClientService {
 
         LOGGER.info(gitHubUsers.toString());
        return gitHubUsers;
+    }
+
+    public String getRateLimit() throws GithubClientExection {
+        String rateLimit = "";
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
+                .fromUriString(API_URL+ "/rate_limit");
+        try {
+            //return restTemplate.getForObject(uriBuilder.toUriString(), GithubUsers.class).getGitHubUsers();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            //@TODO Set user Agent ?
+            HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+            ResponseEntity<String> response = restTemplate.exchange(
+                    uriBuilder.toUriString(),
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class);
+            if(response.hasBody()){
+                rateLimit= response.getBody().toString();
+            }
+        }catch (RestClientException e){
+            throw new GithubClientExection(e);
+        }
+        return rateLimit;
     }
 }

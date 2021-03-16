@@ -10,7 +10,9 @@ mv-install: ## Maven Package
 	mvn clean install
 
 mv-build: ## Maven Build Docker image using maven build plugin
-   mvn spring-boot:build-image
+    mvn spring-boot:build-image
+
+build-from-scratch: mv-install build ## Maven install and Docker build
 
 build: ## Docker Build image using maven build plugin
 	docker build  --no-cache -t erasmolpa/github-client:${TAG} .
