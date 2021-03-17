@@ -2,10 +2,7 @@ package com.githubclient.service;
 
 import com.githubclient.exception.GitHubClientException;
 import com.githubclient.model.GitHubUserDTO;
-import io.github.resilience4j.bulkhead.annotation.Bulkhead;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
