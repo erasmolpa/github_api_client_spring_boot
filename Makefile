@@ -102,13 +102,7 @@ c-down:  ##  DOCKER-COMPOSE Clean all data
 c-status: ##  DOCKER-COMPOSE Show status of containers
 	${compose} ps
 
-.PHONY: c-demo-start
-c-demo-start: ##  DOCKER-COMPOSE Demo UP with the current image published
-	${compose} -f docker-compose-demo.yml up -d
 
--PHONY: c-demo-end
-c-demo-end: ##  DOCKER-COMPOSE Demo DOWN with the current image published
-	${compose} -f docker-compose-demo.yml down
 
 .PHONY: k-info
 k-info: ## HELM status show the current release status
@@ -151,3 +145,10 @@ ship: d-push h-lint h-package ## App SHIP , means --> (Maven full process) AND (
 .PHONY: run
 run: h-install ## App BUILD , means --> (Maven full process) AND (Create the DOCKER Image)
 
+-PHONY: local-demo-start
+local-demo-start: ##  LOCAL DOCKER-COMPOSE Demo UP with the current image published
+	${compose} -f local_demo/docker-compose-local-demo.yml up -d
+
+-PHONY: local-demo-end
+local-demo-end: ##  LOCAL DOCKER-COMPOSE Demo DOWN with the current image published
+	${compose} -f local_demo/docker-compose-local-demo.yml down

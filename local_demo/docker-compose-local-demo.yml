@@ -1,0 +1,53 @@
+version: '3.3'
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.24.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    labels:
+      org.label-schema.group: "monitoring"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
+    networks:
+      - net
+
+  grafana:
+    image: grafana/grafana:7.3.7
+    container_name: grafana
+    volumes:
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./grafana/config.monitoring
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+
+  github-api-client:
+    image: "erasmolpa/github-client:1.2.0"
+    container_name: github-client-api
+    restart: always
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/api/v3/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    ports:
+      - 8080:8080
+    networks:
+      - net
+networks:
+  net:

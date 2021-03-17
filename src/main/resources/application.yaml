@@ -10,8 +10,6 @@ server:
   servlet:
     context-path: /api/v3
 
-management.endpoints.web.exposure.include: '*'
-management.endpoint.health.show-details: always
 
 logging:
   level:
@@ -36,7 +34,7 @@ resilience4j.ratelimiter:
   configs:
     default:
       registerHealthIndicator: true
-      limitForPeriod: 1
+      limitForPeriod: 10
       limitRefreshPeriod: 60s
       timeoutDuration: 0
       eventConsumerBufferSize: 100
@@ -53,3 +51,16 @@ resilience4j.timelimiter:
   instances:
     githubService:
       baseConfig: default
+
+### Actuator Endpoints
+management.endpoints.web.exposure.include: '*'
+management.endpoint.health.show-details: always
+## Metrics
+management:
+  endpoint:
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true

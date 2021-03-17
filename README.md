@@ -53,6 +53,8 @@ Only a recomendation . Docker , Kubernetes Helm , ....
 http://localhost:8080/api/v3/actuator/
 http://localhost:8080/api/v3/actuator/ratelimiterevents/
 http://localhost:8080/api/v3/actuator/metrics Eg http://localhost:8080/api/v3/actuator/metrics
+http://localhost:8080/api/v3/actuator/prometheus
+
 
 ## Roadmap 🚀
 
@@ -85,19 +87,19 @@ Please contact me in the email **erasmolpa@gmail.com** if you have any cuestion
 And if you want, we can connect 😃
 
 <a href="https://twitter.com/erasmolpa">
-  <img align="left" alt="Erasmo Dóminguez Jiménez | Twitter" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/twitter.png" />
+  <img align="left" alt="Erasmo Dominguez Jimenez | Twitter" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/twitter.png" />
 </a>
 
 <a href="https://github.com/erasmolpa">
-  <img align="left" alt="Erasmo Dóminguez Jiménez| GitHub" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/github.png" />
+  <img align="left" alt="Erasmo Dominguez Jimenez | GitHub" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/github.png" />
 </a>
 
 <a href="https://www.linkedin.com/in/erasmolpa/">
-  <img align="left" alt="Erasmo Dóminguez Jiménez | LinkedIn" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/linkedin.png" />
+  <img align="left" alt="Erasmo Dominguez Jimenez | LinkedIn" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/linkedin.png" />
 </a>
 
 <a href="https://www.instagram.com/erasmolpa/">
-  <img align="left" alt="Erasmo Dóminguez Jiménez | Instagram" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/instagram.png" />
+  <img align="left" alt="Erasmo Dominguez Jimenez | Instagram" width="21px" src="https://raw.githubusercontent.com/erasmolpa/erasmolpa/master/assets/instagram.png" />
 </a>
 <br />
 <br />
