@@ -1,7 +1,6 @@
 package com.githubclient.config;
 
 import com.githubclient.exception.HttpClientErrorHandler;
-import com.githubclient.instrumentation.HttpClientRequestInterceptor;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,19 +17,26 @@ public class RestApiConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApiConfig.class);
 
+    /**
+     * Using {@link CloseableHttpClient} to establish and optimize the http client connection against the external api
+     * @see HttpClientConfig
+     */
     @Autowired
     CloseableHttpClient httpClient;
 
     @Bean
     public RestTemplate restTemplate() {
+        LOGGER.info("initializing Rest template bean");
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
                      restTemplate.setErrorHandler(new HttpClientErrorHandler());
+                     //@TODO FIXME restTemplate.setInterceptors(Collections.singletonList(new CustomLoggingInterceptor()));
         return restTemplate;
     }
 
     @Bean
     public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        LOGGER.info("Setting Apache httpClient as http Factory Connection Provider...");
         clientHttpRequestFactory.setHttpClient(httpClient);
         return clientHttpRequestFactory;
     }

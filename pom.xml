@@ -10,10 +10,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-
     <groupId>com.githubclient</groupId>
     <artifactId>github-api-client</artifactId>
-    <version>1.2.0</version>
+    <version>${APP_VERSION}</version>
     <name>github client contributors</name>
     <description>github client</description>
 
@@ -24,10 +23,8 @@
         <testcontainers.version>1.15.2</testcontainers.version>
         <lombok.version>1.18.16</lombok.version>
         <jackson.version>2.8.9</jackson.version>
-        <resilience4jVersion>1.7.0</resilience4jVersion>
+        <resilience4j.version>1.7.0</resilience4j.version>
     </properties>
-
-
 
     <dependencies>
         <!--ENTITY MAPPER-->
@@ -65,34 +62,10 @@
 
         <!-- RATE LIMIT AND GITHUB API CLIENT CONFIGURATION-->
         <dependency>
+            <!-- for rate limiting -->
             <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-circuitbreaker</artifactId>
-            <version>${resilience4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-ratelimiter</artifactId>
-            <version>${resilience4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-retry</artifactId>
-            <version>${resilience4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-bulkhead</artifactId>
-            <version>${resilience4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-cache</artifactId>
-            <version>${resilience4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-timelimiter</artifactId>
-            <version>${resilience4jVersion}</version>
+            <artifactId>resilience4j-spring-boot2</artifactId>
+            <version>${resilience4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -106,6 +79,7 @@
         </dependency>
 
         <!--
+         @TODO Integrate with New Relic account and install agent
          <dependency>
              <groupId>io.micrometer</groupId>
              <artifactId>micrometer-registry-new-relic</artifactId>
@@ -127,8 +101,7 @@
             <artifactId>spring-data-rest-hal-explorer</artifactId>
         </dependency>
 
-        <!--
-
+        <!--@TODO Nice to Have , Single Sing on With Github account
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -137,19 +110,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
         -->
 
         <!--  TESTING DEPENDENCIES -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -164,11 +132,11 @@
             <artifactId>spring-restdocs-mockmvc</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+       <!-- <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

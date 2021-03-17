@@ -14,6 +14,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: "erasmolpa/github-client:${TAG}"
+    image: "${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}:${TAG}"
     ports:
       - "${LOCAL_PORT}:${CONTAINER_PORT}"

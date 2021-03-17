@@ -1,70 +1,55 @@
-GITHUB_API:
-  CONNECT_TIMEOUT: 5000
-  JSON_CONTENT_TYPE: application/json
-  READ_TIMEOUT: 5000
-  URL: https://api.github.com/
-  VERSION_SPEC: application/vnd.github.v3+json
+spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 8080
   servlet:
     context-path: /api/v3
 
-spring:
-  main:
-    allow-bean-definition-overriding: true
+management.endpoints.web.exposure.include: '*'
+management.endpoint.health.show-details: always
 
-resilience4j.circuitbreaker:
-  instances:
-    githubService:
-      registerHealthIndicator: true
-      slidingWindowSize: 10
-      permittedNumberOfCallsInHalfOpenState: 3
-      slidingWindowType: TIME_BASED
-      minimumNumberOfCalls: 20
-      waitDurationInOpenState: 50s
-      failureRateThreshold: 50
-      eventConsumerBufferSize: 10
-      recordFailurePredicate: io.github.robwin.exception.RecordFailurePredicate
+logging:
+  level:
+    httpclient:
+      wire: DEBUG
+    org:
+      apache:
+        http: DEBUG
 
-resilience4j.retry:
-  instances:
-    githubService:
-      maxAttempts: 3
-      waitDuration: 10s
-      enableExponentialBackoff: true
-      exponentialBackoffMultiplier: 2
-      retryExceptions:
-        - org.springframework.web.client.HttpServerErrorException
-        - java.util.concurrent.TimeoutException
-        - java.io.IOException
-      ignoreExceptions:
-        - io.github.robwin.exception.BusinessException
+github_api:
+  uri: https://api.github.com/
+  search_users_path: search/users?
+  version_spec: application/vnd.github.v3+json
 
-resilience4j.bulkhead:
-  instances:
-    githubService:
-      maxWaitDuration: 10ms
-      maxConcurrentCalls: 20
-
-resilience4j.thread-pool-bulkhead:
-  instances:
-    githubService:
-      maxThreadPoolSize: 1
-      coreThreadPoolSize: 1
-      queueCapacity: 1
-
+management.health.ratelimiters.enabled: true
+###                RATE LIMIT
+### In Our case, the RATE Limit is restricted by Search api restrictions.
+###     https://docs.github.com/en/rest/reference/search#rate-limit
+###    https://resilience4j.readme.io/docs/ratelimiter
+##    Limit 10 requests per minute without Auth
 resilience4j.ratelimiter:
+  configs:
+    default:
+      registerHealthIndicator: true
+      limitForPeriod: 1
+      limitRefreshPeriod: 60s
+      timeoutDuration: 0
+      eventConsumerBufferSize: 100
   instances:
     githubService:
-      limitForPeriod: 10
-      limitRefreshPeriod: 1s
-      timeoutDuration: 0
-      registerHealthIndicator: true
-      eventConsumerBufferSize: 100
+      baseConfig: default
 
 resilience4j.timelimiter:
+  configs:
+    default:
+      registerHealthIndicator: true
+      cancelRunningFuture: false
+      timeoutDuration: 2s
   instances:
     githubService:
-      timeoutDuration: 2s
-      cancelRunningFuture: true
+      baseConfig: default

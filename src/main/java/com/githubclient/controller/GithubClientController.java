@@ -1,15 +1,13 @@
 package com.githubclient.controller;
 
-import com.githubclient.exception.GithubClientExection;
+import com.githubclient.exception.GitHubClientException;
 import com.githubclient.service.GithubClientService;
-import com.githubclient.vo.GitHubUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 
 @RestController
@@ -19,31 +17,25 @@ public class GithubClientController {
 
 
     @Autowired
-    public  GithubClientController (GithubClientService ghService){
+    public GithubClientController(@Qualifier("githubService") GithubClientService ghService) {
         this.githubClientService = ghService;
     }
 
     @GetMapping(value = "ranking")
     @ResponseBody
-    public String getContributorsByCity(@RequestParam(required = false,value = "location", defaultValue = "barcelona") String location,
-                                        @RequestParam(required = false,value = "page", defaultValue = "1") int page,
-                                        @RequestParam(required = false,value = "limit", defaultValue = "10") int limit) throws GithubClientExection {
+    public String getRankingByCity(@RequestParam(required = false, value = "location", defaultValue = "barcelona") String location,
+                                        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
+                                        @RequestParam(required = false, value = "limit", defaultValue = "10") int limit) throws GitHubClientException {
 
-        return githubClientService.getContributorsByCity(location, page, limit);
-    }
-
-    @GetMapping(value = "bcn_ranking")
-    @ResponseBody
-    public List<GitHubUser> getBarcelonaUsers() throws GithubClientExection {
-
-        return githubClientService.getAllBarcelonaUsers();
+        return githubClientService.getRankingByCity(location, page, limit);
     }
 
     @GetMapping(value = "rate_limit")
     @ResponseBody
-    public String getRateLimit() throws GithubClientExection {
+    public String getRateLimit() throws GitHubClientException {
 
         return githubClientService.getRateLimit();
     }
 
 }
+

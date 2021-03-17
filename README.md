@@ -27,14 +27,15 @@ The first step in my discovery process has been try to undestand the business un
 
 # Github Api Client
 
+## Prerequisites  📋
+
+Only a recomendation . Docker , Kubernetes Helm , ....
+
 
 ## This proyect was built  🛠️
 
 * [Intellij  IDE](https://www.jetbrains.com/)
 
-## Prerequisites  📋
-
-Only a recomendation . Docker , Kubernetes Helm , ....
 
 ## Build 🔧
 
@@ -49,6 +50,9 @@ Only a recomendation . Docker , Kubernetes Helm , ....
 ## Testing ⚙️
 
 
+http://localhost:8080/api/v3/actuator/
+http://localhost:8080/api/v3/actuator/ratelimiterevents/
+http://localhost:8080/api/v3/actuator/metrics Eg http://localhost:8080/api/v3/actuator/metrics
 
 ## Roadmap 🚀
 

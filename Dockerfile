@@ -1,5 +1,7 @@
 FROM openjdk:8-jdk-alpine as build
 
+MAINTAINER erasmolpa@gmail.com
+
 WORKDIR application
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar

@@ -1,23 +1,27 @@
 package com.githubclient.service;
 
-import com.githubclient.exception.GithubClientExection;
-import com.githubclient.vo.GitHubUser;
-import com.githubclient.vo.GithubUsers;
+import com.githubclient.exception.GitHubClientException;
+import com.githubclient.model.GitHubUserDTO;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Collections;
-import java.util.List;
-
-@Service
+//@Service
+@Component(value = "githubService")
 @PropertySource(value = {"classpath:application.yaml"})
 public class GithubClientService {
 
@@ -26,28 +30,25 @@ public class GithubClientService {
 
     @Autowired
     public GithubClientService(RestTemplate restTemplate){
-     this.restTemplate = restTemplate;
+        this.restTemplate = restTemplate;
     }
 
-    @Value("${GITHUB_API.URL}")
-    private String API_URL;
-    private final String SEARCH_USERS_PATH = "search/users?";
+    @Value("${github_api.uri}")
+    private  String API_URL;
+    @Value("${github_api.search_users_path}")
+    private  String SEARCH_USERS_PATH;
+    @Value("${github_api.version_spec}")
+    private String ACCEPT_HEADER;
 
-    public List<GitHubUser> getAllBarcelonaUsers() throws GithubClientExection {
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder
-                .fromUriString(API_URL+ SEARCH_USERS_PATH + "l=&o=desc")
-                .queryParam("q","location:barcelona")
-                .queryParam("s","repositories")
-                .queryParam("type","Users");
-        try {
-            return restTemplate.getForObject(uriBuilder.toUriString(), GithubUsers.class).getGitHubUsers();
-        }catch (RestClientException e){
-            throw new GithubClientExection(e);
-        }
+    // Maching with the application configuration
+    private static final String SERVICE_NAME= "githubService";
 
-    }
 
-    public String getContributorsByCity(String city, int page, int limit) throws GithubClientExection {
+
+
+    @RateLimiter(name = SERVICE_NAME)
+    @TimeLimiter(name = SERVICE_NAME)
+    public String getRankingByCity(String city, int page, int limit) throws GitHubClientException {
         String gitHubUsers =null;
         String location = "location:"+ city;
 
@@ -60,13 +61,8 @@ public class GithubClientService {
                 .queryParam("per_page",limit);
 
         try {
-            //return restTemplate.getForObject(uriBuilder.toUriString(), GithubUsers.class).getGitHubUsers();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            //@TODO Set user Agent ?
-            HttpEntity<GitHubUser> requestEntity = new HttpEntity<>(null, headers);
 
-
+            HttpEntity<GitHubUserDTO> requestEntity = new HttpEntity<>(null, getCustomHttpHeaders());
             ResponseEntity<String> response = restTemplate.exchange(
                     uriBuilder.toUriString(),
                     HttpMethod.GET,
@@ -77,23 +73,20 @@ public class GithubClientService {
             }
 
         }catch (RestClientException e){
-            throw new GithubClientExection(e);
+            throw new GitHubClientException(e);
         }
 
         LOGGER.info(gitHubUsers.toString());
        return gitHubUsers;
     }
 
-    public String getRateLimit() throws GithubClientExection {
+
+    public String getRateLimit() throws GitHubClientException {
         String rateLimit = "";
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(API_URL+ "/rate_limit");
         try {
-            //return restTemplate.getForObject(uriBuilder.toUriString(), GithubUsers.class).getGitHubUsers();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-            //@TODO Set user Agent ?
-            HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+            HttpEntity<String> requestEntity = new HttpEntity<>(null, getCustomHttpHeaders());
             ResponseEntity<String> response = restTemplate.exchange(
                     uriBuilder.toUriString(),
                     HttpMethod.GET,
@@ -103,8 +96,31 @@ public class GithubClientService {
                 rateLimit= response.getBody().toString();
             }
         }catch (RestClientException e){
-            throw new GithubClientExection(e);
+            throw new GitHubClientException(e);
         }
         return rateLimit;
     }
+     // Out of the scope
+    //@CircuitBreaker(name = SERVICE_NAME)
+    //@Bulkhead(name = SERVICE_NAME)
+    //@Retry(name = SERVICE_NAME)
+    @TimeLimiter(name = SERVICE_NAME)
+    @RateLimiter(name = SERVICE_NAME)
+    public String failure() {
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "This is a remote exception");
+    }
+
+    /**
+     * Build a custom Header based on the github documentation.
+     * @return
+     */
+    @NotNull
+    private HttpHeaders getCustomHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Accept",ACCEPT_HEADER);
+        return headers;
+    }
+
+
 }

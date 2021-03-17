@@ -2,30 +2,42 @@ include .env
 
 compose=docker-compose
 config= --env-file .env
-
+DOCKER_IMAGE=${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}
 PHONY: help
 help:
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-m-install: ## MAVEN Package
-	mvn clean install
+.PHONY: m-package
+m-package: ## MAVEN Package. Create the JAR app.
+	mvn -Drevision=$(APP_VERSION) clean package
 
+.PHONY: m-verify
+m-verify: ## MAVEN Verify Package. Run test
+	mvn verify
+
+.PHONY: m-build
 m-build: ## MAVEN Build Docker image using maven build plugin
     mvn spring-boot:build-image
 
-build-from-scratch: m-install d-build ## Maven install and Docker build
+.PHONY: m-install
+m-install: ## MAVEN Install, create final JAR and copy to local repository
+	mvn -Drevision=$(APP_VERSION) clean install
+
+.PHONY: m-run
+m-run: ## MAVEN Run the app
+    mvn spring-boot:run
 
 d-build: ## DOCKER Build image using maven build plugin
-	docker build  --no-cache -t erasmolpa/github-client:${TAG} .
+	docker build --no-cache -t ${DOCKER_IMAGE}:${TAG} .
 
-d-scan: ## DOCKER Scan Dockerfile
-	docker scan --file Dockerfile
+d-scan: ## DOCKER Scan Image
+	docker scan  ${DOCKER_IMAGE}:${TAG}
 
 d-run: ## DOCKER Run default ports
-	docker run --rm --name ${CONTAINER_NAME} -p ${LOCAL_PORT}:${CONTAINER_PORT}  -p 8443:8443  erasmolpa/github-client:${TAG}
+	docker run --rm --name ${CONTAINER_NAME} ${DOCKER_IMAGE}:${TAG} -p ${LOCAL_PORT}:${CONTAINER_PORT}  -p 8443:8443
 
 d-push: ## DOCKER Push run default ports
-	docker push erasmolpa/github-client:${TAG}
+	docker push  ${DOCKER_IMAGE}:${TAG}
 
 d-stop: ## DOCKER Stop all containers.
 	docker stop $(docker ps -q)
@@ -79,12 +91,13 @@ k-info: ## HELM status show the current release status
 	kubectl get pods --namespace $(HELM_NAMESPACE)
 
 .PHONY: h-lint
-h-package: ## HELM Lint for check the helm files.
+h-lint: ## HELM Lint for check the helm files.
 	helm lint helm-package
 
 .PHONY: h-package
-h-package: k-lint ## HELM Package. Run Helm lint Before. IF is OK, creates a new tar.gz package
+h-package:  ## HELM Package. Run Helm lint Before. IF is OK, creates a new tar.gz package
 	helm package helm-package
+
 
 .PHONY: h-install
 h-install: ## HELM Install the Package Locally.
@@ -105,3 +118,13 @@ h-status: ## HELM status show the current release status
 .PHONY: h-delete
 h-delete: ## HELM status show the current release status
 	helm  delete $(HELM_RELEASE_NAME) --namespace $(HELM_NAMESPACE)
+
+.PHONY: build
+build: m-verify m-install d-build ## App BUILD , means --> (Maven full process) AND (Create the DOCKER Image)
+
+.PHONY: ship
+ship: d-push h-lint h-package ## App SHIP , means --> (Maven full process) AND (Create the DOCKER Image)
+
+.PHONY: run
+run: h-install ## App BUILD , means --> (Maven full process) AND (Create the DOCKER Image)
+
