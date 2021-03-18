@@ -8,7 +8,7 @@ image:
   repository: erasmolpa/github-client
   #pullPolicy: IfNotPresent
   pullPolicy: Always
-  tag: "1.2.0"
+  tag: "0.0.9"
 
 imagePullSecrets: []
 nameOverride: ""

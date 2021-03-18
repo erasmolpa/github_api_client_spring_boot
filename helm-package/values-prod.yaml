@@ -7,7 +7,7 @@ replicaCount: 2
 image:
   repository: erasmolpa/github-client
   pullPolicy: IfNotPresent
-  tag: "1.2.0"
+  tag: "0.0.9"
 
 imagePullSecrets: []
 nameOverride: ""
