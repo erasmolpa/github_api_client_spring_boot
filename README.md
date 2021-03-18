@@ -7,19 +7,19 @@ This repo is about a Spring Boot Client application to integrate with the GitHup
 
 # Requirements
 
-Following, the original requirements:
+Following, the original requirements
 
 ## Service Specifications. (Functional Requirements)
    * Given a city name (e.g. Barcelona) the service returns a list of the top contributors (sorted by number of repositories) in GitHub.
    * The service should give the possibility to return Top 10, 50 or 100 contributors.
-   * The service can be implemented using any set of technologies (language, framework, libraries), but we are more comfortable with Java and Go
-   * The service should make use of the GitHub REST API (https://docs.github.com/en/free-pro-team@latest/rest)
+   * The service can be implemented using any set of technologies (language, framework, libraries), but we are more comfortable with Java and Go.
+   * The service should make use of the GitHub REST API (https://docs.github.com/en/free-pro-team@latest/rest).
 
 ## Requirements. (Non Functional Requirements) 
-   * Make sure to accommodate to the GitHub rate limits
+   * Make sure to accommodate to the GitHub rate limits.
    * Paying attention to concurrency and other scalability issues will be highly appreciated.
-   * Provide a way for spinning up the system (e.g. docker-composer, docker-stack, kubernetes, etc)
-   * The system needs to be fault tolerant and highly available
+   * Provide a way for spinning up the system (e.g. docker-composer, docker-stack, kubernetes, etc).
+   * The system needs to be fault tolerant and highly available.
 
 # Technical Decisions
 
@@ -28,9 +28,13 @@ The technical decisions are based on the requirements specified above and taking
 ## About the Service Specification: (Functional Requirements)
 
    * I decided to implement this integration with SpringBoot because it offers a quick and easy way to implement a configuration-based Rest Client. I can configure the integration easily and be focused in other requirements.
+  
    * For a "real and production ready service", probably I would rather to use Java Standar or Go, and some third party libraries, basically for reducing the "magic",not be tied to a framework, and maybe to improve the performance as well
+  
    * The implementation and Client configuration is based on the Github official documentation.I focused on the Github Search API documentation,and I have to said that the documentation is not entirely clear and there are some gap
+  
    * The integration approach: This is based on a server to server communication, where we deploy a SpringBoot API that uses a Rest Client on the service layer to integrate with the  Github API.
+  
    * I decide to use [Apache HTTPClient](https://hc.apache.org/httpcomponents-client-5.0.x/index.html) for the Github Rest Client Side. This library provides a connection pool manager that allows us to connections,timeouts,
      number of connections and a long etc.For more details, take a look to *HttpClientConfig.java* class in the project. I would like test [OKHttp](https://square.github.io/okhttp/) but is new for me .
      
@@ -235,20 +239,20 @@ About project Tests. Are a bit poor. I cannot dedicate all the time I would like
 
 Following, let me show you how are mapping the request to the Github API from our Service.
 
-Eg 1 **Get Barcelona City Ranking**
+#### Eg 1 Get Barcelona City Ranking
 
-Github API Request --> https://api.github.com/search/users?l=&o=desc&q=location:barcelona&s=repositories&type=Users
+**Github API Request** --> https://api.github.com/search/users?l=&o=desc&q=location:barcelona&s=repositories&type=Users
 
-Api Client --> http://localhost:8080/api/v3/ranking?location=barcelona|
+**Api Client** --> http://localhost:8080/api/v3/ranking?location=barcelona
 
 ![top10](./media/barcelonaranck.png)
 
 
-Eg 2 **Get Barcelona City Ranking Limit result to top 10**
+#### Eg 2 Get Barcelona City Ranking Limit result to top 10
 
-Github API Request --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&range=10
+**Github API Request** --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&range=10
 
-Api Client --> http://localhost:8080/api/v3/ranking?location=barcelona&limit=10
+**Api Client** --> http://localhost:8080/api/v3/ranking?location=barcelona&limit=10
 
 ![top10](./media/top10.png)
 
@@ -288,6 +292,8 @@ All the following end points and more , are available on the Actuator URI
 For a production ready approach, This project should:
 
 🚧 Add CI and CD process.
+
+🚧 Add  params validations. For example, check if a location exists or not.
 
 🚧 Add Integration Testing.
 
