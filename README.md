@@ -249,22 +249,32 @@ About project Tests. Are a bit poor. I cannot dedicate all the time I would like
 
 Following, let me show you how are mapping the request to the Github API from our Service.
 
-#### Eg 1 Get Barcelona City Ranking
+#### - Eg 1 Get Barcelona City Ranking
 
 **Github API Request** --> https://api.github.com/search/users?l=&o=desc&q=location:barcelona&s=repositories&type=Users
 
 **Api Client** --> http://localhost:8080/api/v3/ranking?location=barcelona
 
-![top10](./media/barcelonaranck.png)
+![barcelonaranck](./media/barcelonaranck.png)
 
 
-#### Eg 2 Get Barcelona City Ranking Limit result to top 10
+#### - Eg 2 Get Barcelona City Ranking Limit result to top 10
 
-**Github API Request** --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&range=10
+**Github API Request** --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Userspage=1&per_page=10
 
-**Api Client** --> http://localhost:8080/api/v3/ranking?location=barcelona&limit=10
+**Api Client** --> http://localhost:8080/api/v3/ranking?location:barcelona&limit=10
 
 ![top10](./media/top10.png)
+
+#### - Eg 3 Get Barcelona City Ranking , adding pagination and number of contributors like page number and limit 
+
+Getting the top One contributor in Barcelona:
+
+**Github API Request** --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&page=1&per_page=1
+
+**Api Client** --> http://localhost:8080/api/v3/ranking?location:barcelona&page=1&limit=1
+
+![top1](./media/top1.png)
 
 
 ### All Endpoints /api/v3/actuator/
