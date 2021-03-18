@@ -12,12 +12,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-//@Service
+import java.util.Arrays;
+import java.util.Collections;
+
+@Service
 @Component(value = "githubService")
 @PropertySource(value = {"classpath:application.yaml"})
 public class GithubClientService {
@@ -32,20 +37,20 @@ public class GithubClientService {
 
     @Value("${github_api.uri}")
     private  String API_URL;
+
+
     @Value("${github_api.search_users_path}")
     private  String SEARCH_USERS_PATH;
-    @Value("${github_api.version_spec}")
-    private String ACCEPT_HEADER;
+
+    //@Value("${github_api.version_spec}")
+    //private String ACCEPT_HEADER;
 
     // Maching with the application configuration
     private static final String SERVICE_NAME= "githubService";
 
-
-
-
-    @RateLimiter(name = SERVICE_NAME)
-    @TimeLimiter(name = SERVICE_NAME)
-    public String getRankingByCity(String city, int page, int limit) throws GitHubClientException {
+     @RateLimiter(name = SERVICE_NAME)
+     @TimeLimiter(name = SERVICE_NAME)
+    public String getContributorsByCity(String city, int page, int limit) throws GitHubClientException {
         String gitHubUsers =null;
         String location = "location:"+ city;
 
@@ -97,15 +102,11 @@ public class GithubClientService {
         }
         return rateLimit;
     }
-     // Out of the scope
-    //@CircuitBreaker(name = SERVICE_NAME)
-    //@Bulkhead(name = SERVICE_NAME)
-    //@Retry(name = SERVICE_NAME)
+
     @TimeLimiter(name = SERVICE_NAME)
     @RateLimiter(name = SERVICE_NAME)
-    public String failure() {
-        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "This is a remote exception");
-    }
+    public String failure() { throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "This is a remote exception");  }
+
 
     /**
      * Build a custom Header based on the github documentation.
@@ -115,9 +116,9 @@ public class GithubClientService {
     private HttpHeaders getCustomHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Accept",ACCEPT_HEADER);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        //header.(headers.USER_AGENT, "API-Network");
+        //headers.add("Accept",ACCEPT_HEADER);
         return headers;
     }
-
-
 }

@@ -43,16 +43,16 @@ public class HttpClientConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientConfig.class);
 
     // Determines the timeout in milliseconds until a connection is established.
-    private static final int CONNECT_TIMEOUT = 30000;
+    private static final int CONNECT_TIMEOUT = 6000;
 
     // The timeout when requesting a connection from the connection manager.
-    private static final int REQUEST_TIMEOUT = 30000;
+    private static final int REQUEST_TIMEOUT = 6000;
 
     // The timeout for waiting for data
-    private static final int SOCKET_TIMEOUT = 60000;
+    private static final int SOCKET_TIMEOUT = 6000;
     private static final int MAX_TOTAL_CONNECTIONS = 50;
-    private static final int DEFAULT_KEEP_ALIVE_TIME_MILLIS = 20 * 1000;
-    private static final int CLOSE_IDLE_CONNECTION_WAIT_TIME_SECS = 30;
+    private static final int DEFAULT_KEEP_ALIVE_TIME_MILLIS = 60 * 1000;
+    private static final int CLOSE_IDLE_CONNECTION_WAIT_TIME_SECS = 60;
 
     /**
      *  A connection pool ensures that already opened connections are reused.
@@ -114,7 +114,7 @@ public class HttpClientConfig {
     public Runnable idleConnectionMonitor(final PoolingHttpClientConnectionManager connectionManager) {
         return new Runnable() {
             @Override
-            @Scheduled(fixedDelay = 10000)
+            @Scheduled(fixedDelay = 600000)
             public void run() {
                 try {
                     if (connectionManager != null) {

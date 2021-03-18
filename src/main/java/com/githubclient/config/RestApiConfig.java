@@ -21,15 +21,22 @@ public class RestApiConfig {
      * Using {@link CloseableHttpClient} to establish and optimize the http client connection against the external api
      * @see HttpClientConfig
      */
-    @Autowired
-    CloseableHttpClient httpClient;
 
+    final CloseableHttpClient httpClient;
+
+    public RestApiConfig(CloseableHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
+    /**
+     * @TODO FIXME Set custom loggin interceptor. to improve the visibility in the traces.
+     * //restTemplate.setInterceptors(Collections.singletonList(new CustomLoggingInterceptor()));
+     */
     @Bean
     public RestTemplate restTemplate() {
         LOGGER.info("initializing Rest template bean");
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory());
                      restTemplate.setErrorHandler(new HttpClientErrorHandler());
-                     //@TODO FIXME restTemplate.setInterceptors(Collections.singletonList(new CustomLoggingInterceptor()));
         return restTemplate;
     }
 
@@ -45,7 +52,7 @@ public class RestApiConfig {
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setThreadNamePrefix("poolScheduler");
-        scheduler.setPoolSize(50);
+        scheduler.setPoolSize(100);
         return scheduler;
     }
 }

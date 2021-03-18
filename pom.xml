@@ -12,7 +12,8 @@
 
     <groupId>com.githubclient</groupId>
     <artifactId>github-api-client</artifactId>
-    <version>${APP_VERSION}</version>
+    <version>1.4.0</version>
+    <!--<version>${APP_VERSION}</version>-->
     <name>github client contributors</name>
     <description>github client</description>
 

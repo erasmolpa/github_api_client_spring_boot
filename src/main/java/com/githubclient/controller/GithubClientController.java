@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 @RestController
 public class GithubClientController {
@@ -23,11 +25,11 @@ public class GithubClientController {
 
     @GetMapping(value = "ranking")
     @ResponseBody
-    public String getRankingByCity(@RequestParam(required = false, value = "location", defaultValue = "barcelona") String location,
-                                        @RequestParam(required = false, value = "page", defaultValue = "1") int page,
-                                        @RequestParam(required = false, value = "limit", defaultValue = "10") int limit) throws GitHubClientException {
+    public String getContributorsByCity(@RequestParam(required = false, name = "location") String location,
+                                   @RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                   @RequestParam(required = false, name = "limit", defaultValue = "10") int limit) throws GitHubClientException {
 
-        return githubClientService.getRankingByCity(location, page, limit);
+        return githubClientService.getContributorsByCity(location, page, limit);
     }
 
     @GetMapping(value = "rate_limit")

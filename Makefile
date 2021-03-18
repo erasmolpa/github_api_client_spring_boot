@@ -149,6 +149,6 @@ run: h-install ## App BUILD , means --> (Maven full process) AND (Create the DOC
 local-demo-start: ##  LOCAL DOCKER-COMPOSE Demo UP with the current image published
 	${compose} -f local_demo/docker-compose-local-demo.yml up -d
 
--PHONY: local-demo-end
-local-demo-end: ##  LOCAL DOCKER-COMPOSE Demo DOWN with the current image published
+-PHONY: local-demo-stop
+local-demo-stop: ##  LOCAL DOCKER-COMPOSE Demo DOWN with the current image published
 	${compose} -f local_demo/docker-compose-local-demo.yml down
