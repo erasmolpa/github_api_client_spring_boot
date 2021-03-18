@@ -54,7 +54,7 @@ For more details about the implementation, see the application.yml configuration
 ### Provide a way for spinning up the system:
 
 This project provides different ways to get the system up and running; (like java app, docker, docker-compose, and of course Kubernetes). The solution for this issue has been to use a Makefile
-to automate processes to try to improve the developer experience. The makefile looks like follow:
+to automate processes to try to improve the developer experience. The makefile looks like following:
 
 ![spinning_up](./media/makefile.png)
 
@@ -86,7 +86,7 @@ I have tried to take in count this requirement in every step of the application 
 
 Application configuration. 
 
-The application itself, is deployed with springboot actuator enabled and healthcheck endpoints.
+The application itself, is deployed with springboot actuator enabled and health-check endpoints.
 
 ![api_health](./media/healthcheck.png)
 
@@ -104,7 +104,7 @@ In the Docker-compose demo
 
 ![docker_demo_health](./media/docker_compose_health.png)
 
-In the Kubernetes helm package, where I confured a Liveness and Readyness probe in the deployment.
+In the Kubernetes helm package, where I configured a liveness and readyness probe in the deployment.
 
 ![kubernetes_probe](./media/kubernetes_liveness_probe.png)
 
@@ -185,8 +185,11 @@ For custom configuration, for example, ports binding, etc, check the **.env** fi
 
 ## Run 🚀
 
-**NOTE** The most "complete" way to run, at least from now, is the **docker-compose-demo** option, because deploy, prometheus and grafana as well. 
-  For locally demo using docker-compose :
+**NOTE** 
+
+The most "complete" way to run, at least from now, is the **docker-compose-demo** option, because deploy, prometheus and grafana as well. 
+
+For locally demo using docker-compose :
 
 ### Docker-Compose
 
@@ -201,6 +204,13 @@ For custom configuration, for example, ports binding, etc, check the **.env** fi
      make local-demo-stop 
    ```
 
+If you have not Make installed, you can run docker-compose demo directly as following:
+
+```sh 
+   docker-compose -f local_demo/docker-compose-local-demo.yml up -d    ### For START
+   docker-compose -f local_demo/docker-compose-local-demo.yml down     ### For STOP
+```
+  
 **Endpoints**
 
  [!API Endpoint](http://localhost:8080/api/v3/)
@@ -259,7 +269,7 @@ Following, let me show you how are mapping the request to the Github API from ou
 
 ### All Endpoints /api/v3/actuator/
 
-**Note** Please, acomodate the following endpoints to your local url. This examples are based on the demo endpoint with localhost:8080
+**Note** Please, accommodate the following endpoints to your local url. This examples are based on the demo endpoint with localhost:8080
 
 All the following end points and more , are available on the Actuator URI
 [!SpringBoot Actuator](http://localhost:8080/api/v3/actuator/)
