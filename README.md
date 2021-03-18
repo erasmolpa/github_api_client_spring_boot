@@ -134,7 +134,7 @@ resources: {}
 
 The following section try to explain more in deep how is build the Api and how to configure your environment for build, and run .
 
-## This proyect was built  🛠️
+## This project was built  🛠️
 
 * [Intellij]
 * [Makefile]
@@ -142,11 +142,11 @@ The following section try to explain more in deep how is build the Api and how t
 * [Maven3]
 * [Docker and Docker-Compose]
 * [Helm]
-
+* [Lens]
 
 ## Prerequisites  📋
 
-If you want to for or improve this project, you have to have installed :
+If you want to work on this project, you will need:
 
 * Java 8
 * Make  
@@ -160,6 +160,8 @@ Before, use this project, please check the Mafiles command provides,
    ```sh
      make help
    ```
+
+For custom configuration, for example, ports binding, etc, check the **.env** file 
 
 ## Build 🔧
 
@@ -179,8 +181,10 @@ Before, use this project, please check the Mafiles command provides,
 
 ## Run 🚀
 
-**NOTE** The most "complete" way to run, al leats from now, is the docker-compose-demo option, because deploy, prometheus and grafana as well. 
+**NOTE** The most "complete" way to run, at least from now, is the **docker-compose-demo** option, because deploy, prometheus and grafana as well. 
   For locally demo using docker-compose :
+
+### Docker-Compose
 
  **Start demo**
   ```sh
@@ -193,65 +197,123 @@ Before, use this project, please check the Mafiles command provides,
      make local-demo-stop 
    ```
 
-[!Api](http://localhost:8080/api/v3/)
+**Endpoints**
 
-[!Prometheus](http://localhost:9090)
+ [!API Endpoint](http://localhost:8080/api/v3/)
 
-[!Grafana](http://localhost:3000) (user:admin, pass:foobar)
+ [!Prometheus](http://localhost:9090)
+
+ [!Grafana](http://localhost:3000) (user:admin, pass:foobar)
+
+### Kubernetes
+ 
+You can run the following make command to deploy locally:
+
+**helm install**
+  ```sh
+     make h-install 
+   ```
+
+The helm deployment is configured to expose the API service as NodePort.That means, you will have the service in your localhost and random port. 
+
+  ```sh
+    kubectl get svc -n default
+  ```
+
+![kube_service](./media/kube_service.png)
+
+And then navigate to the endpoint
+
+![kube_service](./media/kubedemo.png)
 
 
 ## Testing ⚙️
 
-The APi delegate the calls to the 
+About project Tests. Are a bit poor. I cannot dedicate all the time I would like to create Mock and integration Testing.
 
-**Get Barcelona City Ranking**
+### Test the APi endpoints
 
-|Github API Example| Api Client|
-|--|--|
-||https://api.github.com/search/users?l=&o=desc&q=location:barcelona&s=repositories&type=Users|http://localhost:8080/api/v3/ranking?location=barcelona|
+Following, let me show you how are mapping the request to the Github API from our Service.
 
-**Get Barcelona City Ranking Limit result to top 10**
+Eg 1 **Get Barcelona City Ranking**
 
-|Github API Example| Api Client|
-|--|--|
-|https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&range=10|http://localhost:8080/api/v3/ranking?location=barcelona&limit=10|
+Github API Request --> https://api.github.com/search/users?l=&o=desc&q=location:barcelona&s=repositories&type=Users
+
+Api Client --> http://localhost:8080/api/v3/ranking?location=barcelona|
+
+![top10](./media/barcelonaranck.png)
 
 
-### All Endpoints 
+Eg 2 **Get Barcelona City Ranking Limit result to top 10**
+
+Github API Request --> https://api.github.com/search/users?o=desc&q=barcelona&s=repositories&type=Users&range=10
+
+Api Client --> http://localhost:8080/api/v3/ranking?location=barcelona&limit=10
+
+![top10](./media/top10.png)
+
+
+### All Endpoints /api/v3/actuator/
+
+**Note** Please, acomodate the following endpoints to your local url. This examples are based on the demo endpoint with localhost:8080
 
 All the following end points and more , are available on the Actuator URI
 [!SpringBoot Actuator](http://localhost:8080/api/v3/actuator/)
 
-### Api 
+### Api /api/v3/
 
 [!Api Base URI](http://localhost:8080/api/v3/)
+
 [!Api Ranking Endpoint](http://localhost:8080/api/v3/ranking)
+
 [!Api Rate Limit Endpoint](http://localhost:8080/api/v3/rate_limit)
 
-### Instrumentation
-[!Api Health Check](http://localhost:8080/api/v3/actuator/health)
-[!Api Metrics](http://localhost:8080/api/v3/actuator/metrics) -- > Example [!http request](http://localhost:8080/api/v3/actuator/metrics/http.server.requests)
-[!Api Prometheus Scrapping Endpoint](http://localhost:8080/api/v3/actuator/prometheus)
-[!Api Resilience Endpoint. Rate Limiter](http://localhost:8080/api/v3/actuator/ratelimiters) ## Services under a RateLimit configuration
+### Instrumentation 
 
+#### /health  
+[!Api Health Check](http://localhost:8080/api/v3/actuator/health)
+
+#### /actuator/metrics
+[!Api Metrics](http://localhost:8080/api/v3/actuator/metrics) -- > Example [!http request](http://localhost:8080/api/v3/actuator/metrics/http.server.requests)
+
+#### /actuator/prometheus 
+[!Api Prometheus Scrapping Endpoint](http://localhost:8080/api/v3/actuator/prometheus)
+
+#### /actuator/ratelimiters
+[!Api Resilience Endpoint. Rate Limiter](http://localhost:8080/api/v3/actuator/ratelimiters) ## Services under a RateLimit configuration
 
 
 ## Roadmap and Improvements 🚀
 
+For a production ready approach, This project should:
+
+🚧 Add CI and CD process.
+
+🚧 Add Integration Testing.
+
+🚧 Improve the Exception management.
+
+🚧 Improve the Log digest management with interceptors.
+
+🚧 Add Swagger support for auto document our API.
+
+🚧 Improve the Rate Limit configuration. Eg. Is not the same rate limit for users authenticates than not authenticated, enterprise or not enterprise account.
+
+🚧 Improve the resilience strategy, adding Circuit Breaker and Bulkhead rules. 
+
+🚧 Add configuration to manage the system and API configuration to deploy into different environments .  
+
+🚧 Make the Services observables. I add configuration to get prometheus basic metrics,but , would be great add New Relic Integration.
+
+🚧 Add Single Sin-On and authentication with Github.
+
+🚧 This Api integration is based on the github Api V3. Thinking in more complex scenarios, and if we add more integrations, will be a must create an anti-corruption layer and validations.
+
+🚧 Improve the security Level in the artifact. I add a Docker Scan check in the Makefile but that should be part of the CI and CD process
+
+🚧 Improve the network configuration of the Helm Package. Adding ssl support and change the service to ClusterIP. The service must be accesible from a Load Balancer or Ingress controller.
+
 See the [open issues](https://github.com/erasmolpa//github_api_client_spring_boot/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for a list of proposed features (and known issues).
-
-In case I´´l be in the situation to continue with this project, the following points are the Features and improvement to a production 
-
-Improve the Testing. I Just had time to do the very basic, but Integration Test and maybe Mock are a Must if finally this is a Real product.
-Improve the way we namage the endpoints 
-Observability , for instance, configure the NewRelic Integration .
-
-|Status|Description|Timeline|
-|--|--|--|
-✅| Initial discovery to understand the API  | Date
-|🚧| Bootstrapping the project and trying to Make the Client Configurable by TDD approach | Date
-|🚧| Building the API Client for **Get** operation | Date
-
 
 <!-- CONTRIBUTING -->
 ## Contributing 🖇️
@@ -265,6 +327,9 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 ### Versioning 📌
+
+This project use [Semantic Versioning](https://semver.org/lang/es/)
+
 
 # Contact ✒️
 
@@ -289,8 +354,5 @@ And if you want, we can connect 😃
 </a>
 <br />
 <br />
-
-## References
-
 
 
