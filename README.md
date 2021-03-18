@@ -213,11 +213,11 @@ If you have not Make installed, you can run docker-compose demo directly as foll
   
 **Endpoints**
 
- [!API Endpoint](http://localhost:8080/api/v3/)
+ [API Endpoint](http://localhost:8080/api/v3/)
 
- [!Prometheus](http://localhost:9090)
+ [Prometheus](http://localhost:9090)
 
- [!Grafana](http://localhost:3000) (user:admin, pass:foobar)
+ [Grafana](http://localhost:3000) (user:admin, pass:foobar)
 
 ### Kubernetes
  
@@ -269,32 +269,44 @@ Following, let me show you how are mapping the request to the Github API from ou
 
 ### All Endpoints /api/v3/actuator/
 
-**Note** Please, accommodate the following endpoints to your local url. This examples are based on the demo endpoint with localhost:8080
-
+**Note** Please, accommodate the following endpoints to your local url. These examples are based on the demo endpoint with localhost:8080
+The 
+**http://localhost:8080/api/v3/**
 All the following end points and more , are available on the Actuator URI
-[!SpringBoot Actuator](http://localhost:8080/api/v3/actuator/)
 
-### Api /api/v3/
+[SpringBoot Actuator](http://localhost:8080/api/v3/actuator/)
 
-[!Api Base URI](http://localhost:8080/api/v3/)
+### API URIS 
 
-[!Api Ranking Endpoint](http://localhost:8080/api/v3/ranking)
+#### Base Uri 
 
-[!Api Rate Limit Endpoint](http://localhost:8080/api/v3/rate_limit)
+[/api/v3/](http://localhost:8080/api/v3/)
 
-### Instrumentation 
+#### Ranking Endpoint
 
-#### /health  
-[!Api Health Check](http://localhost:8080/api/v3/actuator/health)
+[/api/v3/ranking](http://localhost:8080/api/v3/ranking)
 
-#### /actuator/metrics
-[!Api Metrics](http://localhost:8080/api/v3/actuator/metrics) -- > Example [!http request](http://localhost:8080/api/v3/actuator/metrics/http.server.requests)
+#### Rate Limit Status
 
-#### /actuator/prometheus 
-[!Api Prometheus Scrapping Endpoint](http://localhost:8080/api/v3/actuator/prometheus)
+[/api/v3/rate_limit](http://localhost:8080/api/v3/rate_limit)
 
-#### /actuator/ratelimiters
-[!Api Resilience Endpoint. Rate Limiter](http://localhost:8080/api/v3/actuator/ratelimiters) ## Services under a RateLimit configuration
+### Instrumentation EndPoints
+
+#### API Health  
+
+[/api/v3/actuator/health](http://localhost:8080/api/v3/actuator/health)
+
+#### API Metrics
+
+[/api/v3/actuator/metrics](http://localhost:8080/api/v3/actuator/metrics) -- > Example [http request](http://localhost:8080/api/v3/actuator/metrics/http.server.requests)
+
+#### API Prometheus Scrapping
+
+[/actuator/prometheus](http://localhost:8080/api/v3/actuator/prometheus)
+
+#### API Rate Limiter
+
+[/api/v3/actuator/ratelimiters](http://localhost:8080/api/v3/actuator/ratelimiters) ## Services under a RateLimit configuration
 
 
 ## Roadmap and Improvements 🚀
