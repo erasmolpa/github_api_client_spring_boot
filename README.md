@@ -1,11 +1,11 @@
-# About this repo
+# ABOUT
 
 Hi there!! 👋
 
 This repo is about a Spring Boot Client application to integrate with the GitHup API , specifically with the Githup Search API. 
 
 
-# Requirements
+# REQUIREMENTS
 
 Following, the original requirements
 
@@ -18,12 +18,19 @@ Following, the original requirements
 ## Requirements. (Non Functional Requirements) 
    * Make sure to accommodate to the GitHub rate limits.
    * Paying attention to concurrency and other scalability issues will be highly appreciated.
+
+## Deployment
    * Provide a way for spinning up the system (e.g. docker-composer, docker-stack, kubernetes, etc).
    * The system needs to be fault tolerant and highly available.
 
-# Technical Decisions
+## Documentation
+   * Provide a diagram with the system architecture. It can be a hand made drawing  
+   * Specify a deployment plan for the system. How will it grow in the future? 
+   * Do not forget to talk about the performance, how to operate it, key monitoring parameters, observability, etc.
 
-The technical decisions are based on the requirements specified above and taking into account the time I have to deliver the demo.
+# TECHNICAL DECISIONS
+
+**The technical decisions are based on the requirements specified above and taking into account the time I have to deliver the demo.**
 
 ## About the Service Specification: (Functional Requirements)
 
@@ -50,7 +57,9 @@ For more details about the implementation, see the application.yml configuration
 
 ![rate_limit_conf](./media/ratelimit_conf.png)
 
-     
+
+## About Deployments.
+
 ### Provide a way for spinning up the system:
 
 This project provides different ways to get the system up and running; (like java app, docker, docker-compose, and of course Kubernetes). The solution for this issue has been to use a Makefile
@@ -134,7 +143,43 @@ resources: {}
   
 ```
 
-# Github Api Client
+## About Documentation
+
+### Provide a diagram with the system architecture. It can be a hand made drawing
+
+Finally, it is just a Rest Api Server implemented in SpringBoot and that has an Integration service configured with SpringBoot Rest Client to consume the Github api
+
+![diagram](./media/diagram.png)
+
+### Specify a deployment plan for the system. How will it grow in the future?
+
+Our application should be designed and implemented under Cloud Native approach.
+
+The deployment plan should be based on the application lifecycle. This means that we must have a CI and CD system that allows us to carry out the changes in a continuous and stable way.
+
+The CI and CD trigger should be based on the project repository. If We deploy on production, any branch in the repo must have exactly what was deployed.With that "source of truth" we can enable continuous deployment very easy.
+
+Our artifact application should be built as a container image. 
+
+This dev artefact should be deployed and tested in a Kubernetes cluster continually. 
+
+The helm package is configured to update always the image when we run the helm upgrade.
+
+The CI is crucial to improve and iterate de deployment process. Is very important to do integration test, get metrics and discover the best deployment strategy for the product.The CD must be born in the CI process. 
+
+It is very important keep the environment configuration parity to simplify the production deployment.
+
+
+### Do not forget to talk about the performance, how to operate it, key monitoring parameters, observability, etc.
+
+Observability is crucial to understand how we should orchestrate our applications. We have to enable observability in our application taking in counts 2 things:
+
+1) In general terms, we should to follow the four golden signals rules for all our endpoints.
+2) We should to have metrics in all levels. For example, in this project, is very important to have a full trace and metrics of the server to server http calls. Performance, Dependencies, total request time, if exist any degradation.
+
+The most important decisions about product implementation, architecture and implementation strategy come from active work on observability
+
+# GITHUB API CLIENT
 
 The following section try to explain more in deep how is build the Api and how to configure your environment for build, and run .
 
