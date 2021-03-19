@@ -1,0 +1,14 @@
+
+/uploads/
+/out/
+/.idea/
+.git
+*.iml
+*.log
+/logs/
+/scripts/
+/tools/
+Dockerfile.*
+README.md
+Makefile
+docker-compose*
