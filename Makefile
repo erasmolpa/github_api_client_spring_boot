@@ -145,10 +145,10 @@ ship: d-push h-lint h-package ## App SHIP , means --> (Maven full process) AND (
 .PHONY: run
 run: h-install ## App BUILD , means --> (Maven full process) AND (Create the DOCKER Image)
 
--PHONY: local-demo-start
+.PHONY: local-demo-start
 local-demo-start: ##  LOCAL DOCKER-COMPOSE Demo UP with the current image published
 	${compose} -f local_demo/docker-compose-local-demo.yml up -d
 
--PHONY: local-demo-stop
+.PHONY: local-demo-stop
 local-demo-stop: ##  LOCAL DOCKER-COMPOSE Demo DOWN with the current image published
 	${compose} -f local_demo/docker-compose-local-demo.yml down
